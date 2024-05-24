@@ -111,3 +111,29 @@ def test_read_user_deve_retornar_200(client, user):
         'email': 'test@test.com',
         'id': 1,
     }
+
+
+def test_create_user_deve_retornar_400_username(client, user):
+    response = client.post(
+        '/users/',
+        json={
+            'username': 'Test',
+            'email': 'alice@example.com',
+            'password': 'senha',
+        },
+    )
+    assert response.status_code == HTTPStatus.BAD_REQUEST
+    assert response.json() == {'detail': 'Username already exists'}
+
+
+def test_create_user_deve_retornar_400_email(client, user):
+    response = client.post(
+        '/users/',
+        json={
+            'username': 'Alice',
+            'email': 'test@test.com',
+            'password': 'senha',
+        },
+    )
+    assert response.status_code == HTTPStatus.BAD_REQUEST
+    assert response.json() == {'detail': 'Email already exists'}
